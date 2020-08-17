@@ -10,7 +10,7 @@ def osm_to_csv(osmfile):
     path = os.path.abspath(os.path.dirname(__file__)) + f"/data/{osmfile}"
     context = etree.iterparse(path, events=('end',), tag=['node', 'way'], encoding="utf8")
 
-    # Tags que excluem node's representando ruas, semáforos e outros elemntos de tráfego
+    # Tags que excluem node's representando ruas, semáforos e outros elementos de tráfego
     tag_to_ignore = {"maxspeed", "place", "waterway", "noexit", "natural", "barrier",
                      "railway", "crossing", "highway", "traffic_calming", "direction"}
 
@@ -34,22 +34,22 @@ def osm_to_csv(osmfile):
             local._id = elem.attrib.get("id")
 
             for tag in elem.iter("tag"):
-                if tag.attrib['k'] == "name": local.name = tag.attrib['v']
-                if tag.attrib['k'] == "addr:street": local.street = tag.attrib['v']
-                if tag.attrib['k'] == "addr:housenumber": local._number = tag.attrib['v']
-                if tag.attrib['k'] == "addr:city": local.city = tag.attrib['v']
-                if tag.attrib['k'] == "addr:suburb": local.suburb = tag.attrib['v']
-                if tag.attrib['k'] == "addr:state": local.state = tag.attrib['v']
+                if tag.attrib['k'] == "name": local.name = tag.attrib.get('v')
+                if tag.attrib['k'] == "addr:street": local.street = tag.attrib.get('v')
+                if tag.attrib['k'] == "addr:housenumber": local._number = tag.attrib.get('v')
+                if tag.attrib['k'] == "addr:city": local.city = tag.attrib.get('v')
+                if tag.attrib['k'] == "addr:suburb": local.suburb = tag.attrib.get('v')
+                if tag.attrib['k'] == "addr:state": local.state = tag.attrib.get('v')
                 # if tag.attrib['k'] == "addr:country": local.country = tag.attrib['v']
                 local.country = "BR"
                 if tag.attrib['k'] == "addr:postcode": local.postcode = tag.attrib['v']
                 if tag.attrib['k'] == "building" and tag.attrib['v'] != "no":
                     local._building = True
-                if tag.attrib['k'] == "landuse": local.landuse = tag.attrib['v']
-                if tag.attrib['k'] == "amenity": local.amenity = tag.attrib['v']
+                if tag.attrib['k'] == "landuse": local.landuse = tag.attrib.get('v')
+                if tag.attrib['k'] == "amenity": local.amenity = tag.attrib.get('v')
                 if tag.attrib['k'] == "phone" or tag.attrib['k'] == "contact:phone":
-                    local.phone = tag.attrib['v']
-                if tag.attrib['k'] == "email": local.email = tag.attrib['v']
+                    local.phone = tag.attrib.get('v')
+                if tag.attrib['k'] == "email": local.email = tag.attrib.get('v')
             with open('data/points_of_interest.csv', 'a', encoding='UTF-8', newline='') as csv_file:
                 writer = csv.DictWriter(csv_file, delimiter=';', fieldnames=header)
                 d = local.to_row()
